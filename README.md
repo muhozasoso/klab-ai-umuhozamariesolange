@@ -48,12 +48,23 @@ errors and reproduce every output shown, including the smoke test and the saved 
 ## 5. Project layout
 
 ```
-notebooks/   day01_python_for_ai.ipynb — the assignment notebook
+notebooks/   day01_python_for_ai.ipynb — assignment 1 notebook
+             a2_data_wrangling.ipynb — assignment 2 notebook (Titanic analysis)
 src/         utils.py — normalise(), summarise_scores(), safe_divide(), train()
-data/raw/    untouched input data (empty for this assignment)
-data/processed/  derived data (empty for this assignment)
-reports/     day01_chart.png, day01_reflection.md
+data/raw/    titanic.csv — untouched input data for assignment 2
+data/processed/  titanic_cleaned.csv — cleaned, feature-engineered output
+reports/     day01_chart.png, day01_reflection.md,
+             a2_chart1.png, a2_chart2.png,
+             weekend-a2-report.md, weekend-a2-reflection.md, day03-pandas.md
 ```
+
+## Datasets
+
+**Assignment 2 — Titanic passenger data**
+- Source: [seaborn-data/titanic.csv](https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv) (mirrored locally at `data/raw/titanic.csv`)
+- License: BSD-3-Clause (seaborn-data repo); underlying records are historical public-domain passenger data
+- 891 rows, mix of numeric (`age`, `fare`, `sibsp`, `parch`) and categorical (`sex`, `class`, `embarked`, `who`, `deck`) columns
+- Cleaned/feature-engineered version saved to `data/processed/titanic_cleaned.csv` by `notebooks/a2_data_wrangling.ipynb`
 
 ## Secrets
 
