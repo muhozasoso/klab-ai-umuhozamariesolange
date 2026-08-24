@@ -49,6 +49,20 @@ klab-ai-<name>/
 Why it matters: notebooks are laboratories; `src/` is the product. Move code
 across as it stabilises.
 
+## Assignment 2 — dataset
+
+- **Dataset:** Titanic passenger manifest (891 rows, 15 columns)
+- **Source:** [seaborn-data/titanic.csv](https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv)
+- **License:** BSD-3-Clause (seaborn-data repo); underlying passenger records are
+  public-domain historical data
+- **Why:** well above the 200-row minimum, mixes numeric (`age`, `fare`, `sibsp`,
+  `parch`) and categorical (`sex`, `embarked`, `class`, `who`, `deck`) columns, and
+  has real missingness that forces deliberate cleaning decisions
+
+Notebook: [notebooks/a2_data_wrangling.ipynb](notebooks/a2_data_wrangling.ipynb) ·
+Report: [reports/weekend-a2-report.md](reports/weekend-a2-report.md) ·
+Reflection: [reports/weekend-a2-reflection.md](reports/weekend-a2-reflection.md)
+
 ## Secrets
 
 Copy `.env.example` to `.env` and fill in real values locally. `.env` is
