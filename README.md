@@ -67,32 +67,16 @@ Reflection: [reports/weekend-a2-reflection.md](reports/weekend-a2-reflection.md)
 
 Copy `.env.example` to `.env` and fill in real values locally. `.env` is
 gitignored — never commit secrets or large data.
-## Assignment 3 — Spaceship Titanic Solution
+## Assignment 5 — Kaggle Spaceship Titanic Solution
 
-* **Dataset:** Kaggle Spaceship Titanic
-* **Leaderboard Score:** 0.79050
+* **Dataset:** Kaggle Spaceship Titanic (8,693 training rows, 4,277 test rows)
+* **Best Cross-Validation Accuracy:** 0.8123
+* **Kaggle Best Leaderboard Score:** 0.80547 (Latest Submission: 0.79050)
 * **Files:** `notebooks/spaceship_titanic_solution.ipynb` · `data/submission.csv` · `reports/screenshot.png`
-
-### Progress & Iteration Log
-
-I worked through this assignment in 5 stages to build, test, and improve the prediction pipeline step by step:
-
-1. **Iteration 1 — Baseline Setup**  
-   Started with a basic Logistic Regression model using median imputation for numerical values and mode for categorical values to get the pipeline working end-to-end and confirm a valid submission.
-
-2. **Iteration 2 — Feature Extraction**  
-   Split `Cabin` into separate columns (`Deck`, `CabinNum`, `Side`) and extracted group size from `PassengerId`. Summed up luxury spending columns into a total spend feature to capture spending patterns.
-
-3. **Iteration 3 — Decision Tree Ensembles**  
-   Moved to `RandomForestClassifier` to handle non-linear cutoffs in passenger spending and capture feature interactions better than linear models.
-
-4. **Iteration 4 — Gradient Boosting**  
-   Replaced Random Forest with `HistGradientBoostingClassifier`, which handled continuous spend distributions and missing values natively across folds.
-
-5. **Iteration 5 — Hyperparameter Tuning**  
-   Tuned the model using `GridSearchCV` to optimize learning rate and max leaf nodes, reaching my final leaderboard score of 0.79050.
-
-### Main Takeaways
-
-* Parsing text fields like `Cabin` and `PassengerId` made the biggest single difference in overall performance.
-* Placing imputation and scaling inside a scikit-learn `Pipeline` prevented data leakage during validation.
+| # | What I Changed | Why I Expected It to Help | CV Score | Leaderboard Score | What I Concluded |
+|---|---|---|---|---|---|
+| 1 | Baseline Model: Logistic Regression with median (numeric) and mode (categorical) imputation. | Build a simple working pipeline to set a baseline performance floor[cite: 1]. | 0.7860 | 0.78200 | Pipeline works end-to-end and easily beats majority-class baseline (~0.5036)[cite: 1]. |
+| 2 | Feature Engineering: Extracted Deck/Side from Cabin, GroupSize from PassengerId, and TotalSpend. | Raw text strings hold spatial and relational patterns that linear models miss[cite: 1]. | 0.7921 | 0.78950 | Added signal. Cabin location and spending habits noticeably improved predictions (+0.0061 CV)[cite: 1]. |
+| 3 | Model Swap: Replaced Logistic Regression with RandomForestClassifier. | Tree ensembles handle non-linear spending cutoffs and feature interactions better[cite: 1]. | 0.8020 | 0.79830 | CV pushed past 0.80, confirming non-linear interactions are strong in this dataset[cite: 1]. |
+| 4 | Algorithm Upgrade: Switched to HistGradientBoostingClassifier. | Gradient boosting builds trees sequentially to fix previous errors on tabular data[cite: 1]. | 0.8085 | **0.80547** | Boosting yielded my overall highest Kaggle leaderboard score[cite: 1]. |
+| 5 | Hyperparameter Tuning: GridSearchCV (learning_rate=0.05, max_iter=200, max_leaf_nodes=15). | Constraining tree depth and learning rate reduces variance and prevents overfitting[cite: 1]. | **0.8123** | 0.79050 | Reached best CV score locally, though slight variance occurred on the public leaderboard subset[cite: 1]. |
