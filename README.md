@@ -67,3 +67,32 @@ Reflection: [reports/weekend-a2-reflection.md](reports/weekend-a2-reflection.md)
 
 Copy `.env.example` to `.env` and fill in real values locally. `.env` is
 gitignored — never commit secrets or large data.
+## Assignment 3 — Spaceship Titanic Solution
+
+* **Dataset:** Kaggle Spaceship Titanic
+* **Leaderboard Score:** 0.79050
+* **Files:** `notebooks/spaceship_titanic_solution.ipynb` · `data/submission.csv` · `reports/screenshot.png`
+
+### Progress & Iteration Log
+
+I worked through this assignment in 5 stages to build, test, and improve the prediction pipeline step by step:
+
+1. **Iteration 1 — Baseline Setup**  
+   Started with a basic Logistic Regression model using median imputation for numerical values and mode for categorical values to get the pipeline working end-to-end and confirm a valid submission.
+
+2. **Iteration 2 — Feature Extraction**  
+   Split `Cabin` into separate columns (`Deck`, `CabinNum`, `Side`) and extracted group size from `PassengerId`. Summed up luxury spending columns into a total spend feature to capture spending patterns.
+
+3. **Iteration 3 — Decision Tree Ensembles**  
+   Moved to `RandomForestClassifier` to handle non-linear cutoffs in passenger spending and capture feature interactions better than linear models.
+
+4. **Iteration 4 — Gradient Boosting**  
+   Replaced Random Forest with `HistGradientBoostingClassifier`, which handled continuous spend distributions and missing values natively across folds.
+
+5. **Iteration 5 — Hyperparameter Tuning**  
+   Tuned the model using `GridSearchCV` to optimize learning rate and max leaf nodes, reaching my final leaderboard score of 0.79050.
+
+### Main Takeaways
+
+* Parsing text fields like `Cabin` and `PassengerId` made the biggest single difference in overall performance.
+* Placing imputation and scaling inside a scikit-learn `Pipeline` prevented data leakage during validation.
