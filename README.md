@@ -68,34 +68,32 @@ Reflection: [reports/weekend-a2-reflection.md](reports/weekend-a2-reflection.md)
 Copy `.env.example` to `.env` and fill in real values locally. `.env` is
 gitignored — never commit secrets or large data.
 
+# Spaceship Titanic — Kaggle Competition
 
-## Assignment 5 — Kaggle Spaceship Titanic Solution
+* **Best Cross-Validation Score:** 0.8123
+* **Best Leaderboard Score:** 0.80547
+* **Primary Model:** HistGradientBoostingClassifier
+2. Iteration Log
+Every experiment was evaluated locally using 5-Fold Stratified Cross-Validation prior to leaderboard submission to monitor generalization.### Iteration Log
 
-* **Dataset:** Kaggle Spaceship Titanic (8,693 training rows, 4,277 test rows)
-* **Best Cross-Validation Accuracy:** 0.8123
-* **Kaggle Best Leaderboard Score:** 0.80547 (Latest Submission: 0.79050)
-* **Files:** `notebooks/spaceship_titanic_solution.ipynb` · `data/submission.csv` · `reports/screenshot.png`
-Iteration Log
-Every change was evaluated using 5-Fold Stratified Cross-Validation locally before submitting to the Kaggle leaderboard to monitor generalization and avoid overfitting.
-### Iteration Log
-
-Every change was evaluated using 5-Fold Stratified Cross-Validation locally before submitting to the Kaggle leaderboard to monitor generalization and avoid overfitting[cite: 1].
+Every experiment was evaluated locally using 5-Fold Stratified Cross-Validation prior to leaderboard submission to monitor generalization[cite: 1].
 
 | # | What I Changed | Why I Expected It to Help | CV Score | Leaderboard Score | What I Concluded |
 |---|---|---|---|---|---|
-| 1 | **Baseline Model:** Logistic Regression with median (numeric) and mode (categorical) imputation. | Build a simple working pipeline to set a baseline performance floor[cite: 1]. | 0.7860 | 0.78200 | Pipeline works end-to-end and easily beats majority-class baseline (~0.5036)[cite: 1]. |
-| 2 | **Feature Engineering:** Extracted `Deck`/`Side` from `Cabin`, `GroupSize` from `PassengerId`, and `TotalSpend`. | Raw text strings hold spatial and relational patterns that linear models miss[cite: 1]. | 0.7921 | 0.78950 | Added signal. Cabin location and spending habits noticeably improved predictions (+0.0061 CV)[cite: 1]. |
-| 3 | **Model Swap:** Replaced Logistic Regression with `RandomForestClassifier`. | Tree ensembles handle non-linear spending cutoffs and feature interactions better[cite: 1]. | 0.8020 | 0.79830 | CV pushed past 0.80, confirming non-linear interactions are strong in this dataset[cite: 1]. |
-| 4 | **Algorithm Upgrade:** Switched to `HistGradientBoostingClassifier`. | Gradient boosting builds trees sequentially to fix previous errors on tabular data[cite: 1]. | 0.8085 | **0.80547** | Boosting yielded my overall highest Kaggle leaderboard score[cite: 1]. |
-| 5 | **Hyperparameter Tuning:** `GridSearchCV` (`learning_rate=0.05`, `max_iter=200`, `max_leaf_nodes=15`). | Constraining tree depth and learning rate reduces variance and prevents overfitting[cite: 1]. | **0.8123** | 0.79050 | Reached best CV score locally, though slight variance occurred on the public leaderboard subset[cite: 1]. |
-### Feature Engineering Justification
+| 1 | **Baseline Model:** Logistic Regression with median (numeric) and mode (categorical) imputation. | Establish a simple pipeline baseline to verify end-to-end flow[cite: 1]. | 0.7860 | 0.78200 | Pipeline functions end-to-end and beats majority-class baseline (~0.5036). |
+| 2 | **Feature Engineering:** Extracted `Deck`/`Side` from `Cabin`, `GroupSize` from `PassengerId`, and `TotalSpend`. | Spatial and group relationships hold predictive signal linear models miss. | 0.7921 | 0.78950 | Added clear signal; cabin deck and spending metrics improved accuracy (+0.0061 CV). |
+| 3 | **Model Swap:** Switched to `RandomForestClassifier`. | Decision trees capture non-linear spending cutoffs and feature interactions better. | 0.8020 | 0.79830 | Non-linear interactions confirmed valuable, pushing CV past 0.80. |
+| 4 | **Algorithm Upgrade:** Switched to `HistGradientBoostingClassifier`. | Gradient boosting sequentially targets residual errors on tabular datasets[cite: 1]. | 0.8085 | **0.80547** | Achieved the highest public leaderboard score. |
+| 5 | **Hyperparameter Tuning:** `GridSearchCV` (`learning_rate=0.05`, `max_iter=200`, `max_leaf_nodes=15`). | Tree regularization reduces model variance and prevents overfitting[cite: 1]. | **0.8123** | 0.79050 | Reached highest local CV score; public leaderboard variance noted.
+## 3. Feature Engineering Justifications
 
-1. **Cabin Splitting (`Deck`, `CabinNum`, `Side`):** Raw `Cabin` strings (e.g., `B/0/P`) bundle spatial position. Extracting `Deck` directly isolates vertical placement on the ship, which strongly correlates with evacuation priority.
-2. **Group Dynamics (`GroupSize`, `IsAlone`):** Extracted group IDs from `PassengerId` (`gggg_pp`). Families and travel groups moved together during the event, making group size a strong predictor.
-3. **Spending Aggregations (`TotalSpend`, `LogSpend`):** Combined luxury spending (`RoomService`, `FoodCourt`, `ShoppingMall`, `Spa`, `VRDeck`) and applied a `log1p` transform to fix heavy right-skew and separate non-spenders.
-Validation Discipline & Data Leakage Prevention
-5-Fold Stratified K-Fold: Used stratified splits to preserve equal target class distributions across all folds during cross-validation[cite: 1].
+1. **Cabin Splitting (`Deck`, `CabinNum`, `Side`):** Raw `Cabin` strings (e.g., `B/0/P`) isolate passenger deck positions, which correlate directly with proximity to evacuation zones.
+2. **Group Dynamics (`GroupSize`, `IsAlone`):** Extracted travel groups from `PassengerId` (`gggg_pp`). Relational clusters moved together during transport events.
+3. **Spending Aggregations (`TotalSpend`, `LogSpend`):** Aggregated luxury amenity costs (`RoomService`, `FoodCourt`, `ShoppingMall`, `Spa`, `VRDeck`) and applied `log1p` transformations to handle heavy right skew.
+4. Validation Discipline & Leakage Prevention
+Stratified 5-Fold Cross-Validation: Preserved class balances across training and validation splits.
 
-Pipeline Encapsulation: Wrapped numerical imputers (SimpleImputer) and feature scalers inside scikit-learn Pipeline objects to ensure parameters were calculated exclusively on training folds, eliminating data leakage[cite: 1].
+Pipeline Integration: Encapsulated missing-value imputation (SimpleImputer) and feature scaling inside Pipeline objects to prevent data leakage during fold validation.
 
-Cross-Validation Decisions: Guided all model choices and hyperparameter tuning by CV performance rather than leaderboard feedback to prevent overfitting to the public test set.
+CV-Driven Choices: Model selections were justified primarily by cross-validation scores rather than public leaderboard feedback.
+
